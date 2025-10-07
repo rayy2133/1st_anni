@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Kỉ niệm 1 năm </title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #ff99cc, #cc66ff);
+    }
+    /* Container lock */
+    .lock-screen {
+      text-align: center;
+      background: rgba(255,255,255,0.15);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+      backdrop-filter: blur(10px);
+      position: relative;
+      z-index: 2;
+      color: white;
+    }
+    h1 {
+      margin-bottom: 15px;
+      font-size: 28px;
+    }
+    #typing {
+      font-size: 16px;
+      margin-bottom: 20px;
+      min-height: 50px;
+    }
+    input {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: none;
+      text-align: center;
+      width: 200px;
+      margin-bottom: 15px;
+    }
+    button {
+      padding: 10px 20px;
+      background: #ff3366;
+      border: none;
+      border-radius: 15px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #e6004c;
+    }
+    .error {
+      margin-top: 10px;
+      font-size: 14px;
+      color: yellow;
+      display: none;
+    }
+    /* Heart animation */
+    .heart {
+      position: absolute;
+      color: rgba(255,255,255,0.7);
+      font-size: 20px;
+      animation: floatUp 6s linear infinite;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+      30% { opacity: 1; }
+      100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+    }
+    /* Heart explosion */
+    .explode {
+      animation: explode 1s forwards;
+    }
+    @keyframes explode {
+      0% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(3); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="lock-screen">
+    <h1>1ST ANNIVERSARY </h1>
+    <div id="typing"></div>
+    <input type="password" id="password" placeholder="Nhập ngày kỉ niệm...">
+    <br>
+    <button onclick="unlock()">Mở khóa</button>
+    <div class="error" id="error"> Sai mật khẩu rồi...</div>
+  </div>
+
+  <script>
+    // Typing text
+    const text = "Hôm nay tròn 1 năm... \nChúng ta cùng mở album kỉ niệm nhoo";
+    let i = 0;
+    function typeEffect() {
+      if (i < text.length) {
+        document.getElementById("typing").innerHTML += text.charAt(i);
+        i++;
+        setTimeout(typeEffect, 80);
+      }
+    }
+    typeEffect();
+
+    // Hearts background
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.innerHTML = "❤"; 
+      heart.style.left = Math.random() * window.innerWidth + "px";
+      heart.style.fontSize = (Math.random() * 20 + 15) + "px";
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 6000);
+    }
+    setInterval(createHeart, 500);
+
+    // Unlock function
+    function unlock() {
+      const pass = document.getElementById("password").value.trim();
+      const error = document.getElementById("error");
+      const correct = "11102024"; // mật khẩu: ngày kỉ niệm
+
+      if (pass === correct) {
+        // Hiệu ứng trái tim sáng bùng nổ
+        const bigHeart = document.createElement("div");
+        bigHeart.innerHTML = "❤";
+        bigHeart.style.position = "fixed";
+        bigHeart.style.top = "50%";
+        bigHeart.style.left = "50%";
+        bigHeart.style.transform = "translate(-50%,-50%)";
+        bigHeart.style.fontSize = "100px";
+        bigHeart.style.color = "pink";
+        bigHeart.classList.add("explode");
+        document.body.appendChild(bigHeart);
+
+        setTimeout(() => {
+          window.location.href = "letter.html";
+        }, 1000);
+      } else {
+        error.style.display = "block";
+        setTimeout(() => error.style.display="none", 2000);
+      }
+    }
+
+    // Enter để submit
+    document.getElementById("password").addEventListener("keydown", e => {
+      if (e.key === "Enter") unlock();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Gallery Tình Yêu</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: #ffe6f0;
+    }
+    header {
+      text-align: center;
+      padding: 15px;
+      background: #ff99cc;
+      color: white;
+      font-size: 22px;
+      font-weight: bold;
+    }
+    nav {
+      text-align: center;
+      padding: 10px;
+      background: #ffccdd;
+    }
+    nav button {
+      margin: 0 10px;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 20px;
+      background: #ff6699;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    nav button:hover {
+      background: #ff3366;
+    }
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 20px;
+      gap: 15px;
+    }
+    .item {
+      width: 200px;
+      height: 150px;
+      overflow: hidden;
+      border: 5px solid white;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      cursor: pointer;
+      background: white;
+      position: relative;
+    }
+    .item img, .item video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+    /* Viewer */
+    .viewer {
+      display: none;
+      position: fixed;
+      top:0; left:0; right:0; bottom:0;
+      background: rgba(0,0,0,0.8);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    .viewer img, .viewer video {
+      max-width: 70%;
+      max-height: 70%;
+      background: white;
+      padding: 10px;
+      border: 2px solid #ff99cc;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    }
+    .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 35px;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <header>ALBUM HÌNH</header>
+  <nav>
+    <button onclick="showCategory('all')">Tất cả</button>
+    <button onclick="showCategory('chung')">Ảnh chung</button>
+    <button onclick="showCategory('rieng')">Ảnh riêng</button>
+    <button onclick="showCategory('video')">Video</button>
+  </nav>
+
+  <div class="gallery" id="gallery"></div>
+
+  <!-- Viewer -->
+  <div class="viewer" id="viewer">
+    <span class="close-btn" onclick="closeViewer()">×</span>
+    <img id="viewerImg" style="display:none">
+    <video id="viewerVideo" controls style="display:none"></video>
+  </div>
+
+  <script>
+    const galleryData = [];
+
+    for (let i=1;i<=86;i++) {
+      galleryData.push({type:"chung", src:`all_pic/anh(${i}).jpg`});
+    }
+    for (let i=1;i<=54;i++) {
+      galleryData.push({type:"rieng", src:`our_pic/anh1%(${i}).jpg`});
+    }
+    for (let i=1;i<=4;i++) {
+      galleryData.push({type:"video", src:`video/video%(${i}).mp4`, thumb:`video/video%(${i}).mp4`});
+    }
+
+    let currentIndex = 0;
+    let currentCategory = "all";
+
+    const galleryEl = document.getElementById("gallery");
+    const viewer = document.getElementById("viewer");
+    const viewerImg = document.getElementById("viewerImg");
+    const viewerVideo = document.getElementById("viewerVideo");
+
+    function renderGallery() {
+      galleryEl.innerHTML = "";
+      const filtered = galleryData.filter(item => currentCategory==="all" || item.type===currentCategory);
+      filtered.forEach((item, index) => {
+        const div = document.createElement("div");
+        div.className = "item";
+        if (item.type==="video") {
+          const thumb = document.createElement("img");
+          thumb.src = item.thumb || "https://via.placeholder.com/200x150?text=Video";
+          div.appendChild(thumb);
+        } else {
+          const img = document.createElement("img");
+          img.src = item.src;
+          div.appendChild(img);
+        }
+        div.onclick = () => openViewer(index, filtered);
+        galleryEl.appendChild(div);
+      });
+    }
+
+    function showCategory(cat) {
+      currentCategory = cat;
+      renderGallery();
+    }
+
+    let currentFiltered = [];
+    function openViewer(index, filtered) {
+      currentFiltered = filtered;
+      currentIndex = index;
+      const item = filtered[index];
+      viewer.style.display = "flex";
+      if (item.type==="video") {
+        viewerImg.style.display="none";
+        viewerVideo.style.display="block";
+        viewerVideo.src = item.src;
+      } else {
+        viewerVideo.style.display="none";
+        viewerImg.style.display="block";
+        viewerImg.src = item.src;
+      }
+    }
+    function closeViewer() {
+      viewer.style.display="none";
+      viewerVideo.pause();
+    }
+
+    document.addEventListener("keydown", e => {
+      if (viewer.style.display==="flex") {
+        if (e.key==="ArrowRight") {
+          currentIndex = (currentIndex+1) % currentFiltered.length;
+          openViewer(currentIndex, currentFiltered);
+        } else if (e.key==="ArrowLeft") {
+          currentIndex = (currentIndex-1+currentFiltered.length) % currentFiltered.length;
+          openViewer(currentIndex, currentFiltered);
+        } else if (e.key==="Escape") {
+          closeViewer();
+        }
+      }
+    });
+
+    renderGallery();
+  </script>
+</body>
+</html>

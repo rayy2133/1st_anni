@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Letter</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #ffccd5, #ff99cc);
+      font-family: "Segoe UI", cursive;
+      overflow: hidden;
+    }
+    .card {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+      text-align: center;
+      max-width: 600px;
+      position: relative;
+      z-index: 2;
+    }
+    h1 {
+      color: #ff3366;
+      margin-bottom: 20px;
+    }
+    #letter-text {
+      font-size: 18px;
+      color: #444;
+      line-height: 1.6;
+      min-height: 120px;
+      white-space: pre-line;
+    }
+    button {
+      margin-top: 25px;
+      padding: 12px 25px;
+      background: #ff6699;
+      border: none;
+      border-radius: 15px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #ff3366;
+    }
+    .heart {
+      position: absolute;
+      color: rgba(255,0,100,0.3);
+      font-size: 20px;
+      animation: floatUp 6s linear infinite;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+      30% { opacity: 1; }
+      100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>💌 Gửi em 💌</h1>
+    <div id="letter-text"></div>
+    <button onclick="openGallery()">👉 Mở album kỉ niệm</button>
+  </div>
+
+  <script>
+    // Hiệu ứng chữ chạy
+    const text = `Hôm nay là ngày 11/10/2025, là ngày mà tròn một năm chúng ta chính thức quen nhau.
+    Hai chúng mình cũng đã đi qua nhiều kỉ niệm rất là đáng nhớ, vui có, hạnh phúc có, buồn có, thuận lợi hay là khó khăn thì chúng mình cũng đã cùng nhau vượt qua hết. 
+    Sắp tới sẽ là một đoạn đường dài, chúng ta cùng nhau bước tiếp em nhé!. Anh mong chúng ta sẽ luôn luôn vui vẻ, hạnh phúc bên nhau, mong sao chúng ta sẽ ít cãi nhau hơn, ít bướng hơn và trở thành người mà đối phương hằng mong chờ.
+    HAPPY ANNIVERSARY AND LOVE YOU!!!`;
+    let i = 0;
+    function typeLetter() {
+      if (i < text.length) {
+        document.getElementById("letter-text").innerHTML += text.charAt(i);
+        i++;
+        setTimeout(typeLetter, 50);
+      }
+    }
+    typeLetter();
+
+    // Trái tim bay
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.innerHTML = "❤";
+      heart.style.left = Math.random() * window.innerWidth + "px";
+      heart.style.fontSize = (Math.random() * 20 + 15) + "px";
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 6000);
+    }
+    setInterval(createHeart, 500);
+
+    // Chuyển sang gallery
+    function openGallery() {
+      window.location.href = "main.html";
+    }
+  </script>
+</body>
+</html>
